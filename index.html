@@ -6,14 +6,6 @@
   <style>
     body {
       background-color: #111;
-      color:<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="UTF-8">
-  <title>公開テスト - ghepsi</title>
-  <style>
-    body {
-      background-color: #111;
       color: white;
       font-family: sans-serif;
       display: flex;
@@ -30,169 +22,26 @@
       max-width: 300px;
       height: auto;
       margin-bottom: 10px;
+      border-radius: 0px;
     }
     h1 {
       margin: 10px 0 20px;
       font-size: 2rem;
     }
-    .player-box {
-      position: relative;
-      display: inline-block;
-      max-width: 90%;
-      background-color: black;
-    }
-    /* カクカク映像を表示するキャンバス */
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 0px;
-      image-rendering: pixelated;
-    }
-    /* 下部の操作バー（UI）は滑らかに動くように配置 */
     video {
-      display: block;
-      width: 100%;
-      height: 40px;
-      background-color: #222;
+      max-width: 90%;
+      max-height: 60vh;
+      /* 角丸を完全になくして角ばった四角（カクカクUI）にする */
+      border-radius: 0px;
+      /* 拡大時にぼかさずピクセルをくっきり表示する */
+      image-rendering: pixelated;
+      background-color: black;
     }
   </style>
 </head>
 <body>
   <img src="GHEPSI.png" alt="GHEPSIロゴ">
   <h1>公開テスト</h1>
-
-  <div class="player-box">
-    <canvas id="choppyCanvas"></canvas>
-    <!-- 操作バー（再生・停止・シークバー・音量）だけを下に表示 -->
-    <video id="srcVideo" src="badapple.mp4" controls muted loop playsinline></video>
-  </div>
-
-  <script>
-    const video = document.getElementById('srcVideo');
-    const canvas = document.getElementById('choppyCanvas');
-    const ctx = canvas.getContext('2d', { alpha: false }); // 透過処理をオフにして軽量化
-
-    // ★カクカク具合（1秒間のコマ数）
-    const fps = 5;
-    const interval = 1000 / fps;
-    let lastTime = 0;
-
-    video.addEventListener('loadedmetadata', () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      // 最初の1フレームを描画
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    });
-
-    // ブラウザの描画タイミングに合わせて軽量に更新（UIを重くしない）
-    function renderLoop(timestamp) {
-      if (!video.paused && !video.ended) {
-        if (timestamp - lastTime >= interval) {
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          lastTime = timestamp;
-        }
-      }
-      requestAnimationFrame(renderLoop);
-    }
-
-    // シークバーを動かした時も即座に絵を更新する
-    video.addEventListener('seeked', () => {
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    });
-
-    requestAnimationFrame(renderLoop);
-  </script>
-</body>
-</html>
- white;
-      font-family: sans-serif;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-      box-sizing: border-box;
-      text-align: center;
-    }
-    img {
-      max-width: 300px;
-      height: auto;
-      margin-bottom: 10px;
-    }
-    h1 {
-      margin: 10px 0 20px;
-      font-size: 2rem;
-    }
-    .player-box {
-      position: relative;
-      display: inline-block;
-      max-width: 90%;
-      background-color: black;
-    }
-    /* カクカク映像を表示するキャンバス */
-    canvas {
-      display: block;
-      width: 100%;
-      height: auto;
-      border-radius: 0px;
-      image-rendering: pixelated;
-    }
-    /* 下部の操作バー（UI）は滑らかに動くように配置 */
-    video {
-      display: block;
-      width: 100%;
-      height: 40px;
-      background-color: #222;
-    }
-  </style>
-</head>
-<body>
-  <img src="GHEPSI.png" alt="GHEPSIロゴ">
-  <h1>公開テスト</h1>
-
-  <div class="player-box">
-    <canvas id="choppyCanvas"></canvas>
-    <!-- 操作バー（再生・停止・シークバー・音量）だけを下に表示 -->
-    <video id="srcVideo" src="badapple.mp4" controls muted loop playsinline></video>
-  </div>
-
-  <script>
-    const video = document.getElementById('srcVideo');
-    const canvas = document.getElementById('choppyCanvas');
-    const ctx = canvas.getContext('2d', { alpha: false }); // 透過処理をオフにして軽量化
-
-    // ★カクカク具合（1秒間のコマ数）
-    const fps = 5;
-    const interval = 1000 / fps;
-    let lastTime = 0;
-
-    video.addEventListener('loadedmetadata', () => {
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      // 最初の1フレームを描画
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    });
-
-    // ブラウザの描画タイミングに合わせて軽量に更新（UIを重くしない）
-    function renderLoop(timestamp) {
-      if (!video.paused && !video.ended) {
-        if (timestamp - lastTime >= interval) {
-          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-          lastTime = timestamp;
-        }
-      }
-      requestAnimationFrame(renderLoop);
-    }
-
-    // シークバーを動かした時も即座に絵を更新する
-    video.addEventListener('seeked', () => {
-      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-    });
-
-    requestAnimationFrame(renderLoop);
-  </script>
+  <video src="badapple.mp4" controls autoplay muted loop></video>
 </body>
 </html>
