@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>公開テスト - ghepsi</title>
+  <title>公開テストだし、BADAPPLEでも再生します - ghepsi</title>
   <style>
     body {
       background-color: #111;
@@ -27,16 +27,56 @@
       margin: 10px 0 20px;
       font-size: 2rem;
     }
-    video {
+    canvas {
       max-width: 90%;
       max-height: 60vh;
-      border-radius: 8px;
+      /* 角を完全に四角にする（角丸なし） */
+      border-radius: 0px;
+      background-color: black;
+      cursor: pointer;
+      /* 拡大時にぼかさず、ピクセルのドット感をくっきりさせる */
+      image-rendering: pixelated;
     }
   </style>
 </head>
 <body>
   <img src="GHEPSI.png" alt="GHEPSIロゴ">
   <h1>公開テスト</h1>
-  <video src="badapple.mp4" controls autoplay muted loop></video>
+
+  <!-- 元の動画（裏で再生） -->
+  <video id="srcVideo" src="badapple.mp4" autoplay muted loop playsinline style="display: none;"></video>
+  <!-- 角ばったカクカク画面（クリックで音のオン/オフ） -->
+  <canvas id="choppyCanvas" title="クリックで音オン/オフ"></canvas>
+
+  <script>
+    const video = document.getElementById('srcVideo');
+    const canvas = document.getElementById('choppyCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // ★1. カクカク具合（1秒間のコマ数：小さいほどカクカク）
+    const fps = 5;
+
+    // ★2. ピクセルの粗さ（1なら元の画質、0.2などにするとドットが粗くなる）
+    const pixelScale = 1;
+
+    video.addEventListener('loadedmetadata', () => {
+      canvas.width = video.videoWidth * pixelScale;
+      canvas.height = video.videoHeight * pixelScale;
+      // 表示サイズを元の動画サイズに合わせる
+      canvas.style.width = video.videoWidth + 'px';
+      canvas.style.height = video.videoHeight + 'px';
+    });
+
+    setInterval(() => {
+      if (!video.paused && !video.ended) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      }
+    }, 1000 / fps);
+
+    // 画面クリックで音のオン・オフ切り替え
+    canvas.addEventListener('click', () => {
+      video.muted = !video.muted;
+    });
+  </script>
 </body>
 </html>
